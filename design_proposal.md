@@ -75,7 +75,7 @@ int capacity;
 | bool | isEmpty() const |
 | void | clear() |
 
-![DynamicArray Memory Diagram](images/DynamicArray_Memory_Layout.jpeg)
+![DynamicArray Memory Diagram](images/Dynamic_array_memory.jpeg)
 
 ## LinkedList
 
@@ -109,7 +109,7 @@ int currentSize;
 | bool | isEmpty() const |
 | void | clear() |
 
-![LinkedList Memory Diagram](images/LinkedList_Memory_Layout.jpeg)
+![LinkedList Memory Diagram](images/linked_list_memory.jpeg)
 
 ## HashMap
 
@@ -152,7 +152,7 @@ struct Entry
 | bool | isEmpty() const |
 | void | clear() |
 
-![DynamicArray Memory Diagram](images/HashMap_Memory_Layout.jpeg)
+![ HashMap Memory Diagram](images/hash_map_memory%20(1).jpeg)
 
 # 3. Complexity Estimates
 
