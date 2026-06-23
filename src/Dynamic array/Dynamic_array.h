@@ -2,6 +2,7 @@
 #define DYNAMICARRAY_H
 
 #include <cstdlib>
+#include <new>
 #include <stdexcept>
 
 template<typename T>
@@ -33,7 +34,7 @@ public:
     void clear();
 };
 
-#endif
+
 
 template<typename T>
 DynamicArray<T>::DynamicArray()
@@ -50,10 +51,55 @@ DynamicArray<T>::DynamicArray()
 }
 
 template<typename T>
+DynamicArray<T>::DynamicArray(const DynamicArray& other)
+{
+    currentSize = other.currentSize;
+    currentCapacity = other.currentCapacity;
+    data = (T*)malloc(currentCapacity * sizeof(T));
+    if(data == nullptr)
+    {
+        throw std::bad_alloc();
+    }
+    for(int i = 0; i < currentSize; i++)
+    {
+        new (&data[i]) T(other.data[i]);
+    }
+}
+
+template<typename T>
+DynamicArray<T>& DynamicArray<T>::operator=( const DynamicArray& other)
+{
+    if(this == &other)
+    {
+        return *this;
+    }
+    for(int i = 0; i < currentSize; i++)
+    {
+        data[i].~T();
+    }
+    free(data);
+    currentSize = other.currentSize;
+    currentCapacity = other.currentCapacity;
+    data = (T*)malloc(currentCapacity * sizeof(T));
+    if(data == nullptr)
+    {
+        throw std::bad_alloc();
+    }
+    for(int i = 0; i < currentSize; i++)
+    {
+        new (&data[i]) T(other.data[i]);
+    }
+    return *this;
+}
+
+template<typename T>
 DynamicArray<T>::~DynamicArray()
 {
+    for(int i = 0; i < currentSize; i++)
+    {
+        data[i].~T();
+    }
     free(data);
-    data = nullptr;
 }
 
 template<typename T>
@@ -77,14 +123,21 @@ bool DynamicArray<T>::isEmpty() const
 template<typename T>
 void DynamicArray<T>::resize(int newCapacity)
 {
-    T* temp = (T*)realloc(data, newCapacity * sizeof(T));
-
-    if(temp == nullptr)
+    T* newData = (T*)malloc( newCapacity * sizeof(T));
+    if(newData == nullptr)
     {
         throw std::bad_alloc();
     }
-
-    data = temp;
+    for(int i = 0; i < currentSize; i++)
+    {
+        new (&newData[i]) T(data[i]);
+    }
+    for(int i = 0; i < currentSize; i++)
+    {
+        data[i].~T();
+    }
+    free(data);
+    data = newData;
     currentCapacity = newCapacity;
 }
 
@@ -93,13 +146,10 @@ void DynamicArray<T>::append(const T& value)
 {
     if(currentSize == currentCapacity)
     {
-        resize(
-            currentCapacity +
-            currentCapacity / 2
-        );
+        resize(currentCapacity + currentCapacity / 2);
     }
 
-    data[currentSize] = value;
+    new (&data[currentSize]) T(value);
 
     currentSize++;
 }
@@ -137,11 +187,20 @@ void DynamicArray<T>::insert(int index, const T& value)
     {
         resize(currentCapacity + currentCapacity / 2);
     }
-    for(int i = currentSize; i > index; i--)
+    if(currentSize > 0)
     {
-        data[i] = data[i - 1];
+        new (&data[currentSize]) T(data[currentSize - 1]);
+
+        for(int i = currentSize - 1; i > index; i--)
+        {
+            data[i] = data[i - 1];
+        }
+        data[index] = value;
     }
-    data[index] = value;
+    else
+    {
+        new (&data[0]) T(value);
+    }
     currentSize++;
 }
 
@@ -156,5 +215,18 @@ void DynamicArray<T>::remove(int index)
     {
         data[i] = data[i + 1];
     }
+    data[currentSize - 1].~T();
     currentSize--;
 }
+
+template<typename T>
+void DynamicArray<T>::clear()
+{
+    for(int i = 0; i < currentSize; i++)
+    {
+        data[i].~T();
+    }
+    currentSize = 0;
+}
+
+#endif
