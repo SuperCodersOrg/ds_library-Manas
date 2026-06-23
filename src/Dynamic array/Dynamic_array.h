@@ -35,3 +35,41 @@ public:
 
 #endif
 
+template<typename T>
+DynamicArray<T>::DynamicArray()
+{
+    currentSize = 0;
+    currentCapacity = 8;
+
+    data = (T*)malloc(currentCapacity * sizeof(T));
+
+    if(data == nullptr)
+    {
+        throw std::bad_alloc();
+    }
+}
+
+template<typename T>
+DynamicArray<T>::~DynamicArray()
+{
+    free(data);
+    data = nullptr;
+}
+
+template<typename T>
+int DynamicArray<T>::size() const
+{
+    return currentSize;
+}
+
+template<typename T>
+int DynamicArray<T>::capacity() const
+{
+    return currentCapacity;
+}
+
+template<typename T>
+bool DynamicArray<T>::isEmpty() const
+{
+    return currentSize == 0;
+}
