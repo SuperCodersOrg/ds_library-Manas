@@ -1,6 +1,7 @@
 template<typename T>
-struct Node
+class Node
 {
+public:
     T data;
     Node<T>* next;
 
@@ -9,6 +10,7 @@ struct Node
         data = value;
         next = nullptr;
     }
+
     Node(const T& value, Node<T>* nextNode)
     {
         data = value;
@@ -51,16 +53,12 @@ LinkedList<T>::LinkedList()
 }
 
 template<typename T>
-LinkedList<T>::LinkedList(
-    const LinkedList& other
-)
+LinkedList<T>::LinkedList(const LinkedList& other)
 {
     head = nullptr;
     tail = nullptr;
     currentSize = 0;
-
     Node<T>* current = other.head;
-
     while(current != nullptr)
     {
         pushBack(current->data);
@@ -252,10 +250,7 @@ void LinkedList<T>::remove(int index)
 }
 
 template<typename T>
-void LinkedList<T>::insert(
-    int index,
-    const T& value
-)
+void LinkedList<T>::insert(int index,const T& value)
 {
     if(index < 0 || index > currentSize)
     {

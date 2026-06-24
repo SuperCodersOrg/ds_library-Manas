@@ -134,7 +134,7 @@ void DynamicArray<T>::resize(int newCapacity)
     }
     for(int i = 0; i < currentSize; i++)
     {
-        data[i].~T();
+        data[i].~T(); 
     }
     free(data);
     data = newData;
