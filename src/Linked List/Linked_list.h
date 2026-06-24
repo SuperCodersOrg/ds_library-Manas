@@ -51,6 +51,42 @@ LinkedList<T>::LinkedList()
 }
 
 template<typename T>
+LinkedList<T>::LinkedList(
+    const LinkedList& other
+)
+{
+    head = nullptr;
+    tail = nullptr;
+    currentSize = 0;
+
+    Node<T>* current = other.head;
+
+    while(current != nullptr)
+    {
+        pushBack(current->data);
+
+        current = current->next;
+    }
+}
+
+template<typename T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other)
+{
+    if(this == &other)
+    {
+        return *this;
+    }
+    clear();
+    Node<T>* current = other.head;
+    while(current != nullptr)
+    {
+        pushBack(current->data);
+        current = current->next;
+    }
+    return *this;
+}
+
+template<typename T>
 LinkedList<T>::~LinkedList()
 {
     Node<T>* current = head;
@@ -142,3 +178,125 @@ bool LinkedList<T>::contains(const T& value) const
     }
     return false;
 }
+
+template<typename T>
+void LinkedList<T>::removeFront()
+{
+    if(head == nullptr)
+    {
+        throw std::out_of_range("List is empty");
+    }
+    Node<T>* temp = head;
+    head = head->next;
+    delete temp;
+    currentSize--;
+
+    if(head == nullptr)
+    {
+        tail = nullptr;
+    }
+}
+
+template<typename T>
+void LinkedList<T>::removeBack()
+{
+    if(head == nullptr)
+    {
+        throw std::out_of_range("List is empty");
+    }
+    if(head == tail)
+    {
+        delete head;
+        head = nullptr;
+        tail = nullptr;
+        currentSize--;
+        return;
+    }
+    Node<T>* current = head;
+    while(current->next != tail)
+    {
+        current = current->next;
+    }
+    delete tail;
+    tail = current;
+    tail->next = nullptr;
+    currentSize--;
+}
+
+template<typename T>
+void LinkedList<T>::remove(int index)
+{
+    if(index < 0 || index >= currentSize)
+    {
+        throw std::out_of_range("Invalid index");
+    }
+    if(index == 0)
+    {
+        removeFront();
+        return;
+    }
+    if(index == currentSize - 1)
+    {
+        removeBack();
+        return;
+    }
+    Node<T>* current = head;
+    for(int i = 0; i < index - 1; i++)
+    {
+        current = current->next;
+    }
+    Node<T>* temp = current->next;
+    current->next = temp->next;
+    delete temp;
+    currentSize--;
+}
+
+template<typename T>
+void LinkedList<T>::insert(
+    int index,
+    const T& value
+)
+{
+    if(index < 0 || index > currentSize)
+    {
+        throw std::out_of_range("Invalid index");
+    }
+    if(index == 0)
+    {
+        pushFront(value);
+        return;
+    }
+    if(index == currentSize)
+    {
+        pushBack(value);
+        return;
+    }
+    Node<T>* newNode =
+        new Node<T>(value);
+
+    Node<T>* current = head;
+
+    for(int i = 0; i < index - 1; i++)
+    {
+        current = current->next;
+    }
+    newNode->next = current->next;
+    current->next = newNode;
+    currentSize++;
+}
+
+template<typename T>
+void LinkedList<T>::clear()
+{
+    Node<T>* current = head;
+    while(current != nullptr)
+    {
+        Node<T>* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    head = nullptr;
+    tail = nullptr;
+    currentSize = 0;
+}
+
