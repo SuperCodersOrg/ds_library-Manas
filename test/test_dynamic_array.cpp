@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../src/Dynamic array/Dynamic_array.h"
+#include "../include/DynamicArray/Dynamic_array.h"
 
 using namespace std;
 
