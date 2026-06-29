@@ -69,7 +69,7 @@ public:
 
     int hash(const long& key,int bucketCount) const
     {
-        return key % bucketC                                                                                                                                                                                ount;
+        return key % bucketCount;  
     }
 };
 
@@ -161,4 +161,5 @@ public:
 };
 
 #include "../../src/HashMap/hash_map.tpp"
+
 #endif

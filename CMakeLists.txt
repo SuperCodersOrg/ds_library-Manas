@@ -23,3 +23,9 @@ add_executable(
     test_hashmap
     test/test_hashmap.cpp
 )
+
+add_executable(
+    test_redis
+    test/main.cpp
+    src/RedisCli/redis_cli.cpp
+)

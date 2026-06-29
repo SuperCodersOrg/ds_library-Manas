@@ -9,6 +9,11 @@ class RedisCLI
 private:
     HashMap<std::string, std::string> store;
 
+    
+
+public:
+    void run();
+    
     void handleSet(const std::string& key,const std::string& value);
 
     void handleGet(const std::string& key);
@@ -20,9 +25,7 @@ private:
     void handleCount();
 
     void handleClear();
-
-public:
-    void run();
 };
+
 
 #endif
